@@ -31,7 +31,7 @@ public abstract class Graph {
             return new JSONArray(stringBuilder.toString());
         }
 
-        public static <T> void saveToFile(String path, Graph graph) {
+        public static void saveToFile(String path, Graph graph) {
             try {
                 FileWriter fw = new FileWriter(new File(path));
 
