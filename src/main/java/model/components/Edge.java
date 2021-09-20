@@ -1,6 +1,6 @@
 package model.components;
 
-public class Edge {
+public class Edge implements Cloneable {
     private Vertex from;
     private Vertex to;
 
@@ -51,5 +51,21 @@ public class Edge {
         if (to.getLabel().equals(label)) {
             to = null;
         }
+    }
+
+    @Override
+    public Edge clone() {
+        Edge copy = null;
+
+        try {
+            copy = (Edge) super.clone();
+            copy.from = from.clone();
+            copy.to = to.clone();
+            copy.weight = weight;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return copy;
     }
 }

@@ -63,7 +63,7 @@ public abstract class Graph {
             if (edgeList != null) {
                 JSONArray jsonEdges = new JSONArray();
 
-                edgeList.forEach((e) -> {
+                edgeList.forEach(e -> {
                     if (e.getFrom().equals(entry.getKey())) {
                         JSONObject jsonEdge = new JSONObject();
 
@@ -176,8 +176,9 @@ public abstract class Graph {
 
     /*
      * Deep copy
+     * Used in constructors & when returning adjacency list
      * */
-    protected Map<Vertex, List<Vertex>> cloneList() {
+    protected Map<Vertex, List<Vertex>> cloneAdjacencyList() {
         Map<Vertex, List<Vertex>> copyList = new HashMap<>();
 
         for (Map.Entry<Vertex, List<Vertex>> entry : getAdjacencyList().entrySet()) {
@@ -193,13 +194,26 @@ public abstract class Graph {
         return copyList;
     }
 
+    /*
+     * Deep copy
+     * To be used in constructors & when returning edges list
+     * */
+    protected List<Edge> cloneEdgeList() {
+        List<Edge> copyList = new ArrayList<>();
+
+        edgeList.forEach(e -> copyList.add(e.clone()));
+
+        return copyList;
+    }
+
     @Override
     public Graph clone() {
         Graph copy = null;
 
         try {
             copy = (Graph) super.clone();
-            copy.adjacencyList = cloneList();
+            copy.adjacencyList = cloneAdjacencyList();
+            copy.edgeList = cloneEdgeList();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

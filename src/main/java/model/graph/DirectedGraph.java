@@ -2,15 +2,19 @@ package model.graph;
 
 import model.components.Vertex;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class DirectedGraph extends Graph implements Cloneable {
     public DirectedGraph() {
         adjacencyList = new HashMap<>();
+        edgeList = new ArrayList<>();
     }
 
     public DirectedGraph(Graph graph) {
-        this.adjacencyList = graph.cloneList();
+        this.adjacencyList = graph.cloneAdjacencyList();
+        this.edgeList = graph.cloneEdgeList();
     }
 
     public DirectedGraph(String path) {
@@ -33,7 +37,7 @@ public class DirectedGraph extends Graph implements Cloneable {
         Vertex vertex2 = new Vertex(to);
 
         if (adjacencyList.get(vertex1) != null) {
-            adjacencyList.remove(vertex2);
+            adjacencyList.get(vertex1).remove(vertex2);
         }
     }
 
