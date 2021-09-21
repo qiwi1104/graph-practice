@@ -112,14 +112,24 @@ public abstract class Graph {
         }
     }
 
-    protected boolean has(Vertex searchIn, Vertex vertex) {
-        for (Vertex vertexIt : adjacencyList.get(searchIn)) {
-            if (vertexIt.equals(vertex)) {
+    protected boolean has(Vertex where, Vertex what) {
+        for (Vertex vertexIt : adjacencyList.get(where)) {
+            if (vertexIt.equals(what)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    protected boolean isAbsent(Vertex vertex) {
+        for (Vertex elem : adjacencyList.keySet()) {
+            if (elem.equals(vertex)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void addVertex(String label) {
@@ -130,19 +140,29 @@ public abstract class Graph {
         Vertex vertex1 = new Vertex(from);
         Vertex vertex2 = new Vertex(to);
 
-        if (!has(vertex1, vertex2)) {
-            adjacencyList.get(vertex1).add(vertex2);
-        }
+        if (!isAbsent(vertex1) && !isAbsent(vertex2)) {
+            if (!has(vertex1, vertex2)) {
+                adjacencyList.get(vertex1).add(vertex2);
+            }
 
-        if (!has(vertex2, vertex1)) {
-            adjacencyList.get(vertex2).add(vertex1);
+            if (!has(vertex2, vertex1)) {
+                adjacencyList.get(vertex2).add(vertex1);
+            }
+        } else {
+            if (isAbsent(vertex1)) System.out.println("Vertex " + vertex1.getLabel() + " doesn't exist");
+            if (isAbsent(vertex2)) System.out.println("Vertex " + vertex2.getLabel() + " doesn't exist");
         }
     }
 
     public void removeVertex(String label) {
         Vertex vertex = new Vertex(label);
-        adjacencyList.values().forEach(e -> e.remove(vertex));
-        adjacencyList.remove(vertex);
+
+        if (adjacencyList.containsKey(vertex)) {
+            adjacencyList.values().forEach(e -> e.remove(vertex));
+            adjacencyList.remove(vertex);
+        } else {
+            System.out.println("Vertex " + vertex.getLabel() + " doesn't exist");
+        }
     }
 
     public void removeEdge(String from, String to) {
@@ -152,14 +172,26 @@ public abstract class Graph {
         List<Vertex> adjacentVertices1 = adjacencyList.get(vertex1);
         List<Vertex> adjacentVertices2 = adjacencyList.get(vertex2);
 
-        if (adjacentVertices1 != null)
+        if (adjacentVertices1 != null) {
             adjacentVertices1.remove(vertex2);
-        if (adjacentVertices2 != null)
+        } else {
+            if (isAbsent(vertex1)) System.out.println("Vertex " + vertex1.getLabel() + " doesn't exist");
+        }
+
+        if (adjacentVertices2 != null) {
             adjacentVertices2.remove(vertex1);
+        } else {
+            if (isAbsent(vertex2)) System.out.println("Vertex " + vertex2.getLabel() + " doesn't exist");
+        }
     }
 
     public List<Vertex> getAdjacentVertices(String label) {
-        return adjacencyList.get(new Vertex(label));
+        if (adjacencyList.containsKey(new Vertex(label))) {
+            return adjacencyList.get(new Vertex(label));
+        } else {
+            System.out.println("Vertex " + label + " doesn't exist");
+            return new ArrayList<>();
+        }
     }
 
     public Map<Vertex, List<Vertex>> getAdjacencyList() {
@@ -196,7 +228,7 @@ public abstract class Graph {
 
     /*
      * Deep copy
-     * To be used in constructors & when returning edges list
+     * Used in constructors & when returning edges list
      * */
     protected List<Edge> cloneEdgeList() {
         List<Edge> copyList = new ArrayList<>();
