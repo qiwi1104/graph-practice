@@ -22,29 +22,29 @@ public class DirectedGraph extends Graph implements Cloneable {
 
     @Override
     public void addEdge(String from, String to) {
-        Vertex vertex1 = new Vertex(from);
-        Vertex vertex2 = new Vertex(to);
+        Vertex fromVertex = new Vertex(from);
+        Vertex toVertex = new Vertex(to);
 
-        if (!isAbsent(vertex1) && !isAbsent(vertex2)) {
-            if (!has(vertex1, vertex2)) {
-                adjacencyList.get(vertex1).add(vertex2);
+        if (!isAbsent(fromVertex) && !isAbsent(toVertex)) {
+            if (!has(fromVertex, toVertex)) {
+                adjacencyList.get(fromVertex).add(toVertex);
             }
         } else {
-            if (isAbsent(vertex1)) System.out.println("Vertex " + vertex1.getLabel() + " doesn't exist");
-            if (isAbsent(vertex2)) System.out.println("Vertex " + vertex2.getLabel() + " doesn't exist");
+            if (isAbsent(fromVertex)) System.out.println("Vertex " + fromVertex.getLabel() + " doesn't exist");
+            if (isAbsent(toVertex)) System.out.println("Vertex " + toVertex.getLabel() + " doesn't exist");
         }
     }
 
     @Override
     public void removeEdge(String from, String to) {
-        Vertex vertex1 = new Vertex(from);
-        Vertex vertex2 = new Vertex(to);
+        Vertex fromVertex = new Vertex(from);
+        Vertex toVertex = new Vertex(to);
 
-        if (adjacencyList.get(vertex1) != null) {
-            adjacencyList.get(vertex1).remove(vertex2);
+        if (adjacencyList.get(fromVertex) != null) {
+            adjacencyList.get(fromVertex).remove(toVertex);
         } else {
-            System.out.println("Vertex " + vertex1.getLabel() + " doesn't exist");
-            if (isAbsent(vertex2)) System.out.println("Vertex " + vertex2.getLabel() + " doesn't exist");
+            System.out.println("Vertex " + fromVertex.getLabel() + " doesn't exist");
+            if (isAbsent(toVertex)) System.out.println("Vertex " + toVertex.getLabel() + " doesn't exist");
         }
     }
 
