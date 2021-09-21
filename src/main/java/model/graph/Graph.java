@@ -45,7 +45,7 @@ public abstract class Graph {
     }
 
     protected Map<Vertex, List<Vertex>> adjacencyList;
-    protected List<Edge> edgeList;
+    protected List<Edge> edgeList; // used with weighted graphs
 
     private String toJSON() {
         JSONArray jsonGraph = new JSONArray();
@@ -96,7 +96,7 @@ public abstract class Graph {
             }
             adjacencyList.putIfAbsent(vertex, vertices);
 
-            if (jsonObject.has("edges")) {
+            if (jsonObject.has("edges")) { // weighted graph
                 JSONArray jsonEdges = jsonObject.getJSONArray("edges");
 
                 for (int j = 0; j < jsonEdges.length(); j++) {
