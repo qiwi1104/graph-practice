@@ -4,7 +4,6 @@ import model.components.Vertex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class DirectedGraph extends Graph implements Cloneable {
     public DirectedGraph() {
