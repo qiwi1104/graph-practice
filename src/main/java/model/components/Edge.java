@@ -44,15 +44,6 @@ public class Edge implements Cloneable {
         return to;
     }
 
-    public void removeVertex(String label) {
-        if (from.getLabel().equals(label)) {
-            from = null;
-        }
-        if (to.getLabel().equals(label)) {
-            to = null;
-        }
-    }
-
     @Override
     public Edge clone() {
         Edge copy = null;
