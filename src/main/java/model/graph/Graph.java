@@ -186,8 +186,9 @@ public abstract class Graph {
     }
 
     public List<Vertex> getAdjacentVertices(String label) {
-        if (adjacencyList.containsKey(new Vertex(label))) {
-            return adjacencyList.get(new Vertex(label));
+        Vertex vertex = new Vertex(label);
+        if (adjacencyList.containsKey(vertex)) {
+            return adjacencyList.get(vertex);
         } else {
             System.out.println("Vertex " + label + " doesn't exist");
             return new ArrayList<>();
