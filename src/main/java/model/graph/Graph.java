@@ -14,7 +14,7 @@ import java.util.*;
 public abstract class Graph {
     public static class IO {
         private static JSONArray readFile(String path) {
-            StringBuilder stringBuilder = new StringBuilder("");
+            StringBuilder stringBuilder = new StringBuilder();
 
             try {
                 Scanner scanner = new Scanner(new File(path));
