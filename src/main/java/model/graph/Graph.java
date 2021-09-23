@@ -132,15 +132,31 @@ public abstract class Graph {
         return true;
     }
 
+    protected Vertex getVertex(String label) {
+        for (Vertex vertex : adjacencyList.keySet()) {
+            if (vertex.getLabel().equals(label)) {
+                return vertex;
+            }
+        }
+
+        return null;
+    }
+
     public void addVertex(String label) {
-        adjacencyList.putIfAbsent(new Vertex(label), new ArrayList<>());
+        Vertex vertex = getVertex(label);
+
+        if (vertex == null) {
+            adjacencyList.put(new Vertex(label), new ArrayList<>());
+        } else {
+            System.out.println("Vertex " + label + " already exists");
+        }
     }
 
     public void addEdge(String from, String to) {
-        Vertex fromVertex = new Vertex(from);
-        Vertex toVertex = new Vertex(to);
+        Vertex fromVertex = getVertex(from);
+        Vertex toVertex = getVertex(to);
 
-        if (!isAbsent(fromVertex) && !isAbsent(toVertex)) {
+        if (fromVertex != null && toVertex != null) {
             if (!has(fromVertex, toVertex)) {
                 adjacencyList.get(fromVertex).add(toVertex);
             }
@@ -149,8 +165,22 @@ public abstract class Graph {
                 adjacencyList.get(toVertex).add(fromVertex);
             }
         } else {
-            if (isAbsent(fromVertex)) System.out.println("Vertex " + fromVertex.getLabel() + " doesn't exist");
-            if (isAbsent(toVertex)) System.out.println("Vertex " + toVertex.getLabel() + " doesn't exist");
+            if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
+            if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
+        }
+    }
+
+    public void addEdge(String from, String to, int weight) {
+        addEdge(from, to);
+
+        Vertex fromVertex = getVertex(from);
+        Vertex toVertex = getVertex(to);
+
+        if (fromVertex != null && toVertex != null) {
+            edgeList.add(new Edge(fromVertex, toVertex, weight));
+        } else {
+            if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
+            if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
         }
     }
 
