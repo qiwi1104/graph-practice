@@ -89,20 +89,54 @@ public abstract class Graph {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             Vertex vertex = new Vertex(jsonObject.get("label").toString());
 
-            List<Vertex> vertices = new ArrayList<>();
+            /*
+             * Checks if Vertex exists as a value, but not as a key yet
+             * */
+            for (Map.Entry<Vertex, List<Vertex>> entry : getAdjacencyList().entrySet()) {
+                for (Vertex v : entry.getValue()) {
+                    if (v.getLabel().equals(vertex.getLabel())) {
+                        vertex = v;
+                        break;
+                    }
+                }
+            }
+
+            List<Vertex> vertices = getAdjacentVertices(vertex.getLabel());
+
             for (int j = 0; j < jsonObject.getJSONArray("vertices").length(); j++) {
-                Vertex key = new Vertex(jsonObject.getJSONArray("vertices").get(j).toString());
+                Vertex key = getVertex(jsonObject.getJSONArray("vertices").get(j).toString());
+
+                if (key == null) {
+                    key = new Vertex(jsonObject.getJSONArray("vertices").get(j).toString());
+                }
+
                 vertices.add(key);
             }
-            adjacencyList.putIfAbsent(vertex, vertices);
+
+            if (!adjacencyList.containsKey(vertex)) {
+                adjacencyList.put(vertex, vertices);
+            }
 
             if (jsonObject.has("edges")) { // weighted graph
                 JSONArray jsonEdges = jsonObject.getJSONArray("edges");
 
                 for (int j = 0; j < jsonEdges.length(); j++) {
-                    edgeList.add(new Edge(
-                            vertex.getLabel(),
-                            jsonEdges.getJSONObject(j).get("to").toString(),
+                    Vertex to = getVertex(jsonEdges.getJSONObject(j).get("to").toString());
+                    if (to == null) to = new Vertex(jsonEdges.getJSONObject(j).get("to").toString());
+
+                    /*
+                     * Checks if Vertex exists as a value, but not as a key yet
+                     * */
+                    for (Map.Entry<Vertex, List<Vertex>> entry : getAdjacencyList().entrySet()) {
+                        for (Vertex v : entry.getValue()) {
+                            if (v.getLabel().equals(to.getLabel())) {
+                                to = v;
+                                break;
+                            }
+                        }
+                    }
+
+                    edgeList.add(new Edge(vertex, to,
                             Integer.parseInt(jsonEdges
                                     .getJSONObject(j)
                                     .get("weight")
@@ -120,16 +154,6 @@ public abstract class Graph {
         }
 
         return false;
-    }
-
-    protected boolean isAbsent(Vertex vertex) {
-        for (Vertex elem : adjacencyList.keySet()) {
-            if (elem.equals(vertex)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     protected Vertex getVertex(String label) {
@@ -185,19 +209,19 @@ public abstract class Graph {
     }
 
     public void removeVertex(String label) {
-        Vertex vertex = new Vertex(label);
+        Vertex vertex = getVertex(label);
 
-        if (adjacencyList.containsKey(vertex)) {
+        if (vertex != null) {
             adjacencyList.values().forEach(e -> e.remove(vertex));
             adjacencyList.remove(vertex);
         } else {
-            System.out.println("Vertex " + vertex.getLabel() + " doesn't exist");
+            System.out.println("Vertex " + label + " doesn't exist");
         }
     }
 
     public void removeEdge(String from, String to) {
-        Vertex fromVertex = new Vertex(from);
-        Vertex toVertex = new Vertex(to);
+        Vertex fromVertex = getVertex(from);
+        Vertex toVertex = getVertex(to);
 
         List<Vertex> adjacentVerticesFrom = adjacencyList.get(fromVertex);
         List<Vertex> adjacentVerticesTo = adjacencyList.get(toVertex);
@@ -205,19 +229,19 @@ public abstract class Graph {
         if (adjacentVerticesFrom != null) {
             adjacentVerticesFrom.remove(toVertex);
         } else {
-            if (isAbsent(fromVertex)) System.out.println("Vertex " + fromVertex.getLabel() + " doesn't exist");
+            if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
         }
 
         if (adjacentVerticesTo != null) {
             adjacentVerticesTo.remove(fromVertex);
         } else {
-            if (isAbsent(toVertex)) System.out.println("Vertex " + toVertex.getLabel() + " doesn't exist");
+            if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
         }
     }
 
     public List<Vertex> getAdjacentVertices(String label) {
-        Vertex vertex = new Vertex(label);
-        if (adjacencyList.containsKey(vertex)) {
+        Vertex vertex = getVertex(label);
+        if (vertex != null) {
             return adjacencyList.get(vertex);
         } else {
             System.out.println("Vertex " + label + " doesn't exist");

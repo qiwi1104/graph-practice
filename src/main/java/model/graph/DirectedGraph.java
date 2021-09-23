@@ -50,15 +50,15 @@ public class DirectedGraph extends Graph implements Cloneable {
 
     @Override
     public void removeEdge(String from, String to) {
-        Vertex fromVertex = new Vertex(from);
-        Vertex toVertex = new Vertex(to);
+        Vertex fromVertex = getVertex(from);
+        Vertex toVertex = getVertex(to);
 
-        if (adjacencyList.get(fromVertex) != null) {
+        if (fromVertex != null) {
             adjacencyList.get(fromVertex).remove(toVertex);
         } else {
-            System.out.println("Vertex " + fromVertex.getLabel() + " doesn't exist");
-            if (isAbsent(toVertex)) System.out.println("Vertex " + toVertex.getLabel() + " doesn't exist");
+            System.out.println("Vertex " + from + " doesn't exist");
         }
+        if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
     }
 
     @Override
