@@ -146,10 +146,12 @@ public abstract class Graph {
         }
     }
 
-    protected boolean ifAdjacent(Vertex vertex1, Vertex vertex2) {
-        for (Vertex vertexIt : adjacencyList.get(vertex1)) {
-            if (vertexIt.equals(vertex2)) {
-                return true;
+    protected boolean pathExists(Vertex vertex1, Vertex vertex2) {
+        if (vertex1 != null && vertex2 != null) {
+            for (Vertex vertexIt : adjacencyList.get(vertex1)) {
+                if (vertexIt.equals(vertex2)) {
+                    return true;
+                }
             }
         }
 
@@ -181,12 +183,16 @@ public abstract class Graph {
         Vertex toVertex = getVertex(to);
 
         if (fromVertex != null && toVertex != null) {
-            if (!ifAdjacent(fromVertex, toVertex)) {
-                adjacencyList.get(fromVertex).add(toVertex);
-            }
+            if (pathExists(fromVertex, toVertex)) {
+                System.out.println("Edge " + from + " <-> " + to + " already exists");
+            } else {
+                if (!pathExists(fromVertex, toVertex)) {
+                    adjacencyList.get(fromVertex).add(toVertex);
+                }
 
-            if (!ifAdjacent(toVertex, fromVertex)) {
-                adjacencyList.get(toVertex).add(fromVertex);
+                if (!pathExists(toVertex, fromVertex)) {
+                    adjacencyList.get(toVertex).add(fromVertex);
+                }
             }
         } else {
             if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
@@ -227,7 +233,7 @@ public abstract class Graph {
         List<Vertex> adjacentVerticesTo = adjacencyList.get(toVertex);
 
 
-        if (!ifAdjacent(fromVertex, toVertex)) {
+        if (!pathExists(fromVertex, toVertex)) {
             System.out.println("Edge " + from + " <-> " + to + " doesn't exist");
         } else {
             if (adjacentVerticesFrom != null) {
@@ -246,6 +252,7 @@ public abstract class Graph {
 
     public List<Vertex> getAdjacentVertices(String label) {
         Vertex vertex = getVertex(label);
+
         if (vertex != null) {
             return adjacencyList.get(vertex);
         } else {
@@ -255,7 +262,7 @@ public abstract class Graph {
     }
 
     public Map<Vertex, List<Vertex>> getAdjacencyList() {
-        return new HashMap<>(adjacencyList);
+        return cloneAdjacencyList();
     }
 
     public void print() {
@@ -273,7 +280,7 @@ public abstract class Graph {
     protected Map<Vertex, List<Vertex>> cloneAdjacencyList() {
         Map<Vertex, List<Vertex>> copyList = new HashMap<>();
 
-        for (Map.Entry<Vertex, List<Vertex>> entry : getAdjacencyList().entrySet()) {
+        for (Map.Entry<Vertex, List<Vertex>> entry : adjacencyList.entrySet()) {
             List<Vertex> adjacentVertices = new ArrayList<>();
 
             for (Vertex adjacentVertex : entry.getValue()) {
