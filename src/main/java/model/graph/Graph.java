@@ -207,7 +207,19 @@ public abstract class Graph {
         Vertex toVertex = getVertex(to);
 
         if (fromVertex != null && toVertex != null) {
-            edgeList.add(new Edge(fromVertex, toVertex, weight));
+            if (pathExists(fromVertex, toVertex)) {
+                System.out.println("Edge " + from + " <-> " + to + " already exists");
+            } else {
+                if (!pathExists(fromVertex, toVertex)) {
+                    adjacencyList.get(fromVertex).add(toVertex);
+                }
+
+                if (!pathExists(toVertex, fromVertex)) {
+                    adjacencyList.get(toVertex).add(fromVertex);
+                }
+
+                edgeList.add(new Edge(fromVertex, toVertex, weight));
+            }
         } else {
             if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
             if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
@@ -231,7 +243,6 @@ public abstract class Graph {
 
         List<Vertex> adjacentVerticesFrom = adjacencyList.get(fromVertex);
         List<Vertex> adjacentVerticesTo = adjacencyList.get(toVertex);
-
 
         if (!pathExists(fromVertex, toVertex)) {
             System.out.println("Edge " + from + " <-> " + to + " doesn't exist");
