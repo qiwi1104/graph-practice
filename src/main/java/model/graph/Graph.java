@@ -101,7 +101,8 @@ public abstract class Graph {
                 }
             }
 
-            List<Vertex> vertices = getAdjacentVertices(vertex.getLabel());
+            Vertex temp = getVertex(vertex.getLabel());
+            List<Vertex> vertices = temp != null ? adjacencyList.get(temp) : new ArrayList<>();
 
             for (int j = 0; j < jsonObject.getJSONArray("vertices").length(); j++) {
                 Vertex key = getVertex(jsonObject.getJSONArray("vertices").get(j).toString());
@@ -261,7 +262,7 @@ public abstract class Graph {
         }
     }
 
-    public List<Vertex> getAdjacentVertices(String label) {
+    public List<Vertex> getReachableVertices(String label) {
         Vertex vertex = getVertex(label);
 
         if (vertex != null) {
