@@ -146,9 +146,9 @@ public abstract class Graph {
         }
     }
 
-    protected boolean has(Vertex where, Vertex what) {
-        for (Vertex vertexIt : adjacencyList.get(where)) {
-            if (vertexIt.equals(what)) {
+    protected boolean ifAdjacent(Vertex vertex1, Vertex vertex2) {
+        for (Vertex vertexIt : adjacencyList.get(vertex1)) {
+            if (vertexIt.equals(vertex2)) {
                 return true;
             }
         }
@@ -181,11 +181,11 @@ public abstract class Graph {
         Vertex toVertex = getVertex(to);
 
         if (fromVertex != null && toVertex != null) {
-            if (!has(fromVertex, toVertex)) {
+            if (!ifAdjacent(fromVertex, toVertex)) {
                 adjacencyList.get(fromVertex).add(toVertex);
             }
 
-            if (!has(toVertex, fromVertex)) {
+            if (!ifAdjacent(toVertex, fromVertex)) {
                 adjacencyList.get(toVertex).add(fromVertex);
             }
         } else {
@@ -226,16 +226,21 @@ public abstract class Graph {
         List<Vertex> adjacentVerticesFrom = adjacencyList.get(fromVertex);
         List<Vertex> adjacentVerticesTo = adjacencyList.get(toVertex);
 
-        if (adjacentVerticesFrom != null) {
-            adjacentVerticesFrom.remove(toVertex);
-        } else {
-            if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
-        }
 
-        if (adjacentVerticesTo != null) {
-            adjacentVerticesTo.remove(fromVertex);
+        if (!ifAdjacent(fromVertex, toVertex)) {
+            System.out.println("Edge " + from + " <-> " + to + " doesn't exist");
         } else {
-            if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
+            if (adjacentVerticesFrom != null) {
+                adjacentVerticesFrom.remove(toVertex);
+            } else {
+                if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
+            }
+
+            if (adjacentVerticesTo != null) {
+                adjacentVerticesTo.remove(fromVertex);
+            } else {
+                if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
+            }
         }
     }
 

@@ -27,7 +27,7 @@ public class DirectedGraph extends Graph implements Cloneable {
         Vertex toVertex = getVertex(to);
 
         if (fromVertex != null && toVertex != null) {
-            if (!has(fromVertex, toVertex)) {
+            if (!ifAdjacent(fromVertex, toVertex)) {
                 adjacencyList.get(fromVertex).add(toVertex);
             }
         } else {
@@ -53,12 +53,16 @@ public class DirectedGraph extends Graph implements Cloneable {
         Vertex fromVertex = getVertex(from);
         Vertex toVertex = getVertex(to);
 
-        if (fromVertex != null) {
-            adjacencyList.get(fromVertex).remove(toVertex);
+        if (!ifAdjacent(fromVertex, toVertex)) {
+            System.out.println("Edge " + from + " -> " + to + " doesn't exist");
         } else {
-            System.out.println("Vertex " + from + " doesn't exist");
+            if (fromVertex != null) {
+                adjacencyList.get(fromVertex).remove(toVertex);
+            } else {
+                System.out.println("Vertex " + from + " doesn't exist");
+            }
+            if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
         }
-        if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
     }
 
     @Override
