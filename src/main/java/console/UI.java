@@ -45,17 +45,17 @@ public class UI {
                 System.out.println("An undirected graph has been created");
             }
 
-            if (str.matches("new directed graph from file [a-zA-Z0-9]+.json")) {
+            if (str.matches("new directed graph from file \\w+.json")) {
                 graph = new DirectedGraph(FOLDER + str.split(" ")[5]);
                 System.out.println("A directed graph has been created");
             }
 
-            if (str.matches("new undirected graph from file [a-zA-Z0-9]+.json")) {
+            if (str.matches("new undirected graph from file \\w+.json")) {
                 graph = new UndirectedGraph(FOLDER + str.split(" ")[5]);
                 System.out.println("An undirected graph has been created");
             }
 
-            if (str.matches("add vertex [a-zA-Z0-9]+")) {
+            if (str.matches("add vertex \\w+")) {
                 previousState = graph.getAdjacencyList();
 
                 graph.addVertex(str.split(" ")[2]);
@@ -65,7 +65,7 @@ public class UI {
                 }
             }
 
-            if (str.matches("add edge [a-zA-Z0-9]+ [a-zA-Z0-9]+")) {
+            if (str.matches("add edge \\w+ \\w+")) {
                 previousState = graph.getAdjacencyList();
 
                 graph.addEdge(str.split(" ")[2], str.split(" ")[3]);
@@ -83,7 +83,7 @@ public class UI {
                 }
             }
 
-            if (str.matches("add edge [a-zA-Z0-9]+ [a-zA-Z0-9]+ [0-9]+")) {
+            if (str.matches("add edge \\w+ \\w+ \\d+")) {
                 previousState = graph.getAdjacencyList();
 
                 if (!previousState.equals(graph.getAdjacencyList())) {
@@ -101,7 +101,7 @@ public class UI {
                 }
             }
 
-            if (str.matches("remove vertex [a-zA-Z0-9]+")) {
+            if (str.matches("remove vertex \\w+")) {
                 previousState = graph.getAdjacencyList();
 
                 graph.removeVertex(str.split(" ")[2]);
@@ -111,7 +111,7 @@ public class UI {
                 }
             }
 
-            if (str.matches("remove edge [a-zA-Z0-9]+ [a-zA-Z0-9]+")) {
+            if (str.matches("remove edge \\w+ \\w+")) {
                 previousState = graph.getAdjacencyList();
 
                 graph.removeEdge(str.split(" ")[2], str.split(" ")[3]);
@@ -130,7 +130,15 @@ public class UI {
             }
 
             if (str.matches("print")) {
-                graph.print();
+                if (graph != null) {
+                    if (!graph.getAdjacencyList().isEmpty()) {
+                        graph.print();
+                    } else {
+                        System.out.println("The graph has no vertices");
+                    }
+                } else {
+                    System.out.println("The graph doesn't exist");
+                }
             }
         }
     }
