@@ -1,3 +1,5 @@
+package console;
+
 import model.components.Vertex;
 import model.graph.DirectedGraph;
 import model.graph.Graph;
@@ -8,34 +10,35 @@ import java.util.Map;
 import java.util.Set;
 
 public class Task {
+    private static final String FOLDER = System.getProperty("user.dir") + "/src/main/resources/";
+
     private static Graph graph;
 
     // Ia (1)
-    public static void isolatedVertices() {
-        graph = new DirectedGraph(Application.FOLDER + "input4.json");
-
-        Set<Vertex> isolatedVertices = new HashSet<>(graph.getAdjacencyList().keySet());
+    public static void isolatedVertices(Graph graph1) {
+        graph = graph1;
 
         /*
          * Searches for isolated vertices
          * */
+        Set<Vertex> vertexSet = new HashSet<>();
         for (Map.Entry<Vertex, List<Vertex>> entry : graph.getAdjacencyList().entrySet()) {
-            for (Vertex from : graph.getAdjacencyList().keySet()) {
-                for (Vertex to : entry.getValue()) {
-                    if (to.getLabel().equals(from.getLabel())) {
-                        isolatedVertices.remove(from);
-                    }
-                }
-            }
+            if (entry.getValue().isEmpty())
+                vertexSet.add(entry.getKey());
         }
 
-        System.out.println("Isolated vertices:");
-        isolatedVertices.forEach(v -> System.out.println(v.getLabel()));
+        if (vertexSet.isEmpty()) {
+            System.out.println("There are no isolated vertices");
+        }
+        else {
+            System.out.print("Isolated vertices:");
+            vertexSet.forEach(System.out::println);
+        }
     }
 
     // Ia (2)
-    public static void adjacentVertices(String label) {
-        graph = new DirectedGraph(Application.FOLDER + "input2.json");
+    public static void adjacentVertices(Graph graph1, String label) {
+        graph = graph1;
         Set<Vertex> adjacentVertices = new HashSet<>();
 
         graph.getAdjacencyList().forEach((key, value) -> value.forEach(v -> {

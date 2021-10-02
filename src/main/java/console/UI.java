@@ -133,6 +133,14 @@ public class UI {
                 }
             }
 
+            if (str.equals("Ia1")) {
+                Task.isolatedVertices(graph);
+            }
+
+            if (str.matches("Ia2 \\w+")) {
+                Task.adjacentVertices(graph, str.split(" ")[1]);
+            }
+
             if (str.matches("print")) {
                 if (graph != null) {
                     if (!graph.getAdjacencyList().isEmpty()) {
