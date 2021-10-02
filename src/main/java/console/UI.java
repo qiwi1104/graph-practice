@@ -65,10 +65,16 @@ public class UI {
                 }
             }
 
-            if (str.matches("add edge \\w+ \\w+")) {
+            if (str.matches("add edge \\w+ \\w+ (.?\\d+)")) {
                 previousState = graph.getAdjacencyList();
 
-                graph.addEdge(str.split(" ")[2], str.split(" ")[3]);
+                int weight = Integer.parseInt(str.split(" ")[4]);
+
+                if (weight >= 0) {
+                    graph.addEdge(str.split(" ")[2], str.split(" ")[3], weight);
+                } else {
+                    System.out.println("Weight must be positive");
+                }
 
                 if (!previousState.equals(graph.getAdjacencyList())) {
                     System.out.print("Edge " + str.split(" ")[2]);
@@ -81,14 +87,12 @@ public class UI {
 
                     System.out.println(str.split(" ")[3] + " has been added");
                 }
-            }
-
-            if (str.matches("add edge \\w+ \\w+ \\d+")) {
+            } else if (str.matches("add edge \\w+ \\w+")) {
                 previousState = graph.getAdjacencyList();
 
-                if (!previousState.equals(graph.getAdjacencyList())) {
-                    graph.addEdge(str.split(" ")[2], str.split(" ")[3], Integer.parseInt(str.split(" ")[4]));
+                graph.addEdge(str.split(" ")[2], str.split(" ")[3]);
 
+                if (!previousState.equals(graph.getAdjacencyList())) {
                     System.out.print("Edge " + str.split(" ")[2]);
 
                     if (graph instanceof DirectedGraph) {
