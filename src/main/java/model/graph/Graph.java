@@ -11,6 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import static model.graph.Graph.Weight.*;
+import static model.graph.Graph.Weight.NOT_WEIGHTED;
+
 public abstract class Graph {
     public static class IO {
         private static JSONArray readFile(String path) {
@@ -44,8 +47,13 @@ public abstract class Graph {
         }
     }
 
+    protected enum Weight {
+        WEIGHTED, NOT_WEIGHTED, UNKNOWN
+    }
+
     protected Map<Vertex, List<Vertex>> adjacencyList;
     protected List<Edge> edgeList; // used with weighted graphs
+    protected Weight weight = Weight.UNKNOWN;
 
     private String toJSON() {
         JSONArray jsonGraph = new JSONArray();
@@ -84,6 +92,7 @@ public abstract class Graph {
         JSONArray jsonArray = IO.readFile(path);
         adjacencyList = new HashMap<>();
         edgeList = new ArrayList<>();
+        weight = Weight.NOT_WEIGHTED;
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -119,6 +128,7 @@ public abstract class Graph {
             }
 
             if (jsonObject.has("edges")) { // weighted graph
+                weight = Weight.WEIGHTED;
                 JSONArray jsonEdges = jsonObject.getJSONArray("edges");
 
                 for (int j = 0; j < jsonEdges.length(); j++) {
@@ -179,7 +189,7 @@ public abstract class Graph {
         }
     }
 
-    public void addEdge(String from, String to) {
+    private void addEdge(String from, String to, Weight weight) {
         Vertex fromVertex = getVertex(from);
         Vertex toVertex = getVertex(to);
 
@@ -201,29 +211,40 @@ public abstract class Graph {
         }
     }
 
-    public void addEdge(String from, String to, int weight) {
-        addEdge(from, to);
-
-        Vertex fromVertex = getVertex(from);
-        Vertex toVertex = getVertex(to);
-
-        if (fromVertex != null && toVertex != null) {
-            if (pathExists(fromVertex, toVertex)) {
-                System.out.println("Edge " + from + " <-> " + to + " already exists");
-            } else {
-                if (!pathExists(fromVertex, toVertex)) {
-                    adjacencyList.get(fromVertex).add(toVertex);
-                }
-
-                if (!pathExists(toVertex, fromVertex)) {
-                    adjacencyList.get(toVertex).add(fromVertex);
-                }
-
-                edgeList.add(new Edge(fromVertex, toVertex, weight));
+    public void addEdge(String from, String to) {
+        if (!weight.equals(WEIGHTED)) {
+            if (weight.equals(UNKNOWN)) {
+                addEdge(from, to, UNKNOWN);
+                weight = NOT_WEIGHTED;
+            } else if (weight.equals(NOT_WEIGHTED)) {
+                addEdge(from, to, NOT_WEIGHTED);
             }
         } else {
-            if (fromVertex == null) System.out.println("Vertex " + from + " doesn't exist");
-            if (toVertex == null) System.out.println("Vertex " + to + " doesn't exist");
+            System.out.println("Specify weight (this graph is weighted)");
+        }
+    }
+
+    public void addEdge(String from, String to, int weight) {
+        if (!this.weight.equals(NOT_WEIGHTED)) {
+            if (this.weight.equals(UNKNOWN)) {
+                this.weight = WEIGHTED;
+            }
+
+            addEdge(from, to, WEIGHTED);
+
+            Vertex fromVertex = getVertex(from);
+            Vertex toVertex = getVertex(to);
+
+            if (pathExists(fromVertex, toVertex)) {
+                Edge edge = new Edge(fromVertex, toVertex, weight);
+
+                if (edgeList.stream().noneMatch(e -> e.equals(edge))) {
+                    edgeList.add(edge);
+                    edgeList.add(new Edge(toVertex, fromVertex, weight));
+                }
+            }
+        } else {
+            System.out.println("This graph is not weighted");
         }
     }
 
@@ -280,7 +301,20 @@ public abstract class Graph {
     public void print() {
         for (Map.Entry<Vertex, List<Vertex>> entry : getAdjacencyList().entrySet()) {
             System.out.print(entry.getKey().getLabel() + ": ");
-            entry.getValue().forEach(v -> System.out.print(v.getLabel() + " "));
+
+            entry.getValue().forEach(v -> {
+                System.out.print(v.getLabel());
+
+                if (!edgeList.isEmpty()) {
+                    for (Edge edge : edgeList) {
+                        if (edge.getFrom().equals(entry.getKey()) && edge.getTo().equals(v)) {
+                            System.out.print("(" + edge.getWeight() + ") ");
+                        }
+                    }
+                } else {
+                    System.out.print(" ");
+                }
+            });
             System.out.println();
         }
     }
