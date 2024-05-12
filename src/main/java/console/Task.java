@@ -4,10 +4,8 @@ import model.components.Vertex;
 import model.graph.DirectedGraph;
 import model.graph.Graph;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Task {
     private static final String FOLDER = System.getProperty("user.dir") + "/src/main/resources/";
@@ -29,8 +27,7 @@ public class Task {
 
         if (vertexSet.isEmpty()) {
             System.out.println("There are no isolated vertices");
-        }
-        else {
+        } else {
             System.out.print("Isolated vertices:");
             vertexSet.forEach(System.out::println);
         }
@@ -52,5 +49,29 @@ public class Task {
 
         System.out.println("Vertices adjacent to " + label + ": ");
         adjacentVertices.forEach(v -> System.out.println(v.getLabel()));
+    }
+
+    public static Graph graphComplement(Graph graph1) {
+        DirectedGraph complementGraph = new DirectedGraph();
+
+        Map<Vertex, List<Vertex>> adjacencyList = graph1.getAdjacencyList();
+
+        Map<Vertex, List<Vertex>> complementGraphAdjacencyList = new HashMap<>();
+
+        List<Vertex> vertices = new ArrayList<>(graph1.getAdjacencyList().keySet());
+
+        for (Vertex vertex : vertices) {
+            complementGraphAdjacencyList.put(vertex, new ArrayList<>(vertices));
+        }
+
+        for (Map.Entry<Vertex, List<Vertex>> entry : adjacencyList.entrySet()) {
+            for (Vertex b : new ArrayList<>(entry.getValue())) {
+                complementGraphAdjacencyList.get(entry.getKey()).remove(b);
+            }
+        }
+
+        complementGraph.setAdjacencyList(complementGraphAdjacencyList);
+
+        return complementGraph;
     }
 }
