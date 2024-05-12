@@ -141,6 +141,10 @@ public class UI {
                 Task.adjacentVertices(graph, str.split(" ")[1]);
             }
 
+            if (str.equals("BFS")) {
+                Task.isStronglyConnected(graph);
+            }
+
             if (str.matches("print")) {
                 if (graph != null) {
                     if (!graph.getAdjacencyList().isEmpty()) {
