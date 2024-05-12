@@ -298,6 +298,22 @@ public abstract class Graph {
         return cloneAdjacencyList();
     }
 
+    public void setAdjacencyList(Map<Vertex, List<Vertex>> adjacencyList) {
+        Map<Vertex, List<Vertex>> copyList = new HashMap<>();
+
+        for (Map.Entry<Vertex, List<Vertex>> entry : adjacencyList.entrySet()) {
+            List<Vertex> adjacentVertices = new ArrayList<>();
+
+            for (Vertex adjacentVertex : entry.getValue()) {
+                adjacentVertices.add(adjacentVertex.clone());
+            }
+
+            copyList.put(entry.getKey().clone(), adjacentVertices);
+        }
+
+        this.adjacencyList = copyList;
+    }
+
     public void print() {
         for (Map.Entry<Vertex, List<Vertex>> entry : getAdjacencyList().entrySet()) {
             System.out.print(entry.getKey().getLabel() + ": ");
