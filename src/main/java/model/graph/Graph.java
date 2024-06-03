@@ -52,6 +52,7 @@ public abstract class Graph {
     }
 
     protected Map<Vertex, List<Vertex>> adjacencyList;
+
     protected List<Edge> edgeList; // used with weighted graphs
     protected Weight weight = Weight.UNKNOWN;
 
@@ -312,6 +313,10 @@ public abstract class Graph {
         }
 
         this.adjacencyList = copyList;
+    }
+
+    public List<Edge> getEdgeList() {
+        return edgeList;
     }
 
     public void print() {

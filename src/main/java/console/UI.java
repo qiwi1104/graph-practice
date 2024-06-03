@@ -149,6 +149,10 @@ public class UI {
                 Task.isStronglyConnected(graph);
             }
 
+            if (str.equals("MST")) {
+                Task.MST(graph);
+            }
+
             if (str.matches("print")) {
                 if (graph != null) {
                     if (!graph.getAdjacencyList().isEmpty()) {
