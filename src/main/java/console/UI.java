@@ -1,13 +1,13 @@
 package console;
 
+import model.components.Edge;
 import model.components.Vertex;
 import model.graph.DirectedGraph;
 import model.graph.Graph;
 import model.graph.UndirectedGraph;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UI {
     private static final String FOLDER = System.getProperty("user.dir") + "/src/main/resources/";
@@ -147,6 +147,60 @@ public class UI {
 
             if (str.equals("BFS")) {
                 Task.isStronglyConnected(graph);
+            }
+
+            if (str.equals("DFS")) {
+                List<Vertex> vertices = new ArrayList<>(graph.getAdjacencyList().keySet());
+
+                System.out.println("u v: ");
+
+                str = scanner.nextLine();
+
+                Vertex u = new Vertex(str.split(" ")[0]);
+                Vertex v = new Vertex((str.split(" ")[1]));
+
+                if (!vertices.contains(u)) {
+                    System.out.println("Vertex " + u.getLabel() + " doesn't exist.");
+                }
+                if (!vertices.contains(v)) {
+                    System.out.println("Vertex " + v.getLabel() + " doesn't exist.");
+                }
+
+                if (vertices.contains(u) && vertices.contains(v)) {
+                    List<Edge> edgesToRemove = new ArrayList<>();
+
+                    System.out.println("Edges: ");
+
+                    while (!str.equals("0.")) {
+                        str = scanner.nextLine();
+
+                        if (str.equals("0.")) {
+                            break;
+                        }
+
+                        Edge edge = new Edge(str.split(" ")[0], str.split(" ")[1]);
+                        Edge edgeMirror = null;
+
+                        if (graph instanceof DirectedGraph) {
+                            edgeMirror = new Edge(edge.getTo(), edge.getFrom());
+                        }
+
+                        if (!graph.getAdjacencyList().get(edge.getFrom()).contains(edge.getTo())) {
+                            System.out.println("Edge "
+                                    + edge.getFrom().getLabel() + " -> "
+                                    + edge.getTo().getLabel() + " doesn't exist");
+                            break;
+                        } else {
+                            edgesToRemove.add(edge);
+
+                            if (edgeMirror != null) {
+                                edgesToRemove.add(edgeMirror);
+                            }
+                        }
+                    }
+
+                    Task.isReachable(graph, u, v, edgesToRemove);
+                }
             }
 
             if (str.equals("MST")) {

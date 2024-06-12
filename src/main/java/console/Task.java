@@ -127,7 +127,6 @@ public class Task {
 
         boolean allVerticesReachable = BFS(adjacencyList, start);
 
-
         if (!allVerticesReachable) {
             System.out.println("This graph is not strongly connected");
         } else {
@@ -144,6 +143,51 @@ public class Task {
     }
 
     // II (6)
+    private static Map<Vertex, List<Vertex>> removeEdges(Graph graph,
+                                                         List<Edge> edgesToRemove) {
+        Graph graphCopy = graph.clone();
+
+        for (Edge edge : edgesToRemove) {
+            graphCopy.removeEdge(edge.getFrom().getLabel(), edge.getTo().getLabel());
+        }
+
+        return new HashMap<>(graphCopy.getAdjacencyList());
+    }
+
+    private static List<Vertex> DFS(Map<Vertex, List<Vertex>> adjacencyList,
+                                    Vertex u, Vertex v,
+                                    List<Vertex> visitedVertices) {
+        if (visitedVertices.contains(v)) {
+            return visitedVertices;
+        }
+
+        if (!visitedVertices.contains(u)) {
+            visitedVertices.add(u);
+
+            for (Vertex adjacentVertex : adjacencyList.get(u)) {
+                System.out.println(u.getLabel());
+                DFS(adjacencyList, adjacentVertex, v, visitedVertices);
+            }
+        }
+
+        return visitedVertices;
+    }
+    
+    public static void isReachable(Graph graph, Vertex u, Vertex v, List<Edge> edgesToRemove) {
+        List<Vertex> visitedVertices = new ArrayList<>();
+
+        Map<Vertex, List<Vertex>> adjacencyList = removeEdges(graph, edgesToRemove);
+
+        visitedVertices = DFS(adjacencyList, u, v, visitedVertices);
+
+        if (visitedVertices.contains(v)) {
+            System.out.println("Reachable");
+        } else {
+            System.out.println("Unreachable");
+        }
+    }
+
+    // III (7)
     static class Subset {
         int parent;
         int rank;
@@ -235,6 +279,4 @@ public class Task {
 
         kruskals(edgeList.size(), edgeList);
     }
-
-    
 }
