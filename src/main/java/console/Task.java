@@ -172,7 +172,7 @@ public class Task {
 
         return visitedVertices;
     }
-    
+
     public static void isReachable(Graph graph, Vertex u, Vertex v, List<Edge> edgesToRemove) {
         List<Vertex> visitedVertices = new ArrayList<>();
 
@@ -278,5 +278,50 @@ public class Task {
         edgeList.sort(Comparator.comparingInt(Edge::getWeight));
 
         kruskals(edgeList.size(), edgeList);
+    }
+
+    //    IVa (8)
+    public static boolean dijkstra(Graph graph, Vertex start, Vertex end, int l) {
+        Map<Vertex, List<Vertex>> adjacencyList = graph.getAdjacencyList();
+
+        List<Vertex> unvisitedVertices = new ArrayList<>(adjacencyList.keySet());
+
+        Map<Vertex, Integer> distances = new HashMap<>();
+        for (Vertex vertex : unvisitedVertices) {
+            distances.put(vertex, Integer.MAX_VALUE);
+        }
+
+        distances.put(start, 0);
+
+        Vertex currentVertex = start;
+
+        do {
+            List<Vertex> adjacentVertices = adjacencyList.get(currentVertex);
+
+            Vertex finalCurrentVertex = currentVertex;
+
+            Optional<Edge> edgeOptional = graph.getEdgeList().stream()
+                    .filter(e -> e.getFrom().equals(finalCurrentVertex))
+                    .filter(e -> unvisitedVertices.contains(e.getTo()))
+                    .min(Comparator.comparingInt(Edge::getWeight));
+
+            if (edgeOptional.isEmpty()) {
+                break;
+            } else {
+                Vertex minWeightVertex = edgeOptional.get().getTo();
+
+                for (Edge edge : graph.getEdgeList()) {
+                    if (edge.getFrom().equals(currentVertex) && adjacentVertices.contains(edge.getTo())) {
+                        distances.put(edge.getTo(), edge.getWeight() + distances.get(currentVertex));
+                    }
+                }
+
+                unvisitedVertices.remove(currentVertex);
+
+                currentVertex = minWeightVertex;
+            }
+        } while (!unvisitedVertices.isEmpty() || currentVertex.equals(end));
+
+        return distances.get(end) <= l;
     }
 }
