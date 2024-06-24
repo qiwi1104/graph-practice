@@ -257,13 +257,13 @@ public class UI {
                 }
 
                 if (vertices.contains(u) && vertices.contains(v1) && vertices.contains(v2)) {
-//                    int[] distances = Task.bellmanFord(graph);
-
-//                    System.out.println(
-//                            Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v1.getLabel())
-//                                    + " = " + distances[Integer.parseInt(v1.getLabel()) - 1] + "\n" +
-//                                    Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v2.getLabel())
-//                                    + " = " + distances[Integer.parseInt(v2.getLabel()) - 1]);
+                    int[][] distances = Task.floyd(graph, u, v1, v2);
+                    System.out.println(
+                            Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v1.getLabel())
+                                    + " = " + distances[Integer.parseInt(u.getLabel()) - 1][Integer.parseInt(v1.getLabel()) - 1]
+                                    + "\n" +
+                                    Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v2.getLabel())
+                                    + " = " + distances[Integer.parseInt(u.getLabel()) - 1][Integer.parseInt(v2.getLabel()) - 1]);
                 }
             }
 

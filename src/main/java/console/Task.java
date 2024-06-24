@@ -324,8 +324,39 @@ public class Task {
     }
 
     //    IVb (8)
-    public static void floyd(Graph graph, Vertex u, Vertex v1, Vertex v2) {
+    public static int[][] floyd(Graph graph, Vertex u, Vertex v1, Vertex v2) {
+        int size = graph.getAdjacencyList().keySet().size();
+        int[][] dist = new int[size][size];
 
+        for (int[] ints : dist) {
+            Arrays.fill(ints, Integer.MAX_VALUE);
+        }
+
+        for (Edge edge : graph.getEdgeList()) {
+            int from = Integer.parseInt(edge.getFrom().getLabel());
+            int to = Integer.parseInt(edge.getTo().getLabel());
+
+            dist[from - 1][to - 1] = edge.getWeight();
+        }
+
+        for (Vertex vertex : graph.getAdjacencyList().keySet()) {
+            int vertexLabel = Integer.parseInt(vertex.getLabel());
+
+            dist[vertexLabel - 1][vertexLabel - 1] = 0;
+        }
+
+        for (int k = 0; k < size; k++) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE &&
+                            dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+
+        return dist;
     }
 
     //    IVc (8)
