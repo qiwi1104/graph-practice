@@ -7,7 +7,6 @@ import model.graph.Graph;
 import model.graph.UndirectedGraph;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class UI {
     private static final String FOLDER = System.getProperty("user.dir") + "/src/main/resources/";
@@ -258,14 +257,18 @@ public class UI {
                 }
 
                 if (vertices.contains(u) && vertices.contains(v1) && vertices.contains(v2)) {
-                    int[] distances = Task.bellmanFord(graph, u, v1, v2);
+//                    int[] distances = Task.bellmanFord(graph);
 
-                    System.out.println(
-                            Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v1.getLabel())
-                                    + " = " + distances[Integer.parseInt(v1.getLabel()) - 1] + "\n" +
-                                    Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v2.getLabel())
-                                    + " = " + distances[Integer.parseInt(v2.getLabel()) - 1]);
+//                    System.out.println(
+//                            Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v1.getLabel())
+//                                    + " = " + distances[Integer.parseInt(v1.getLabel()) - 1] + "\n" +
+//                                    Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v2.getLabel())
+//                                    + " = " + distances[Integer.parseInt(v2.getLabel()) - 1]);
                 }
+            }
+
+            if (str.equals("IVc")) {
+                Task.bellmanFord(graph);
             }
 
             if (str.matches("print")) {

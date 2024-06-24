@@ -323,21 +323,23 @@ public class Task {
         return distances.get(end) <= l;
     }
 
-    //    IVc (8)
-    public static int[] bellmanFord(Graph graph, Vertex u1, Vertex v1, Vertex v2) {
-        int V = graph.getAdjacencyList().keySet().size();
-        int E = graph.getEdgeList().size();
+    //    IVb (8)
+    public static void floyd(Graph graph, Vertex u, Vertex v1, Vertex v2) {
 
+    }
+
+    //    IVc (8)
+    private static int[] bellmanFord(Graph graph, Vertex vertex, int V, int E) {
         Edge[] edges = graph.getEdgeList().toArray(new Edge[0]);
 
         int[] dist = new int[V];
         Arrays.fill(dist, Integer.MAX_VALUE);
-        dist[Integer.parseInt(u1.getLabel())-1] = 0;
+        dist[Integer.parseInt(vertex.getLabel()) - 1] = 0;
 
         for (int i = 1; i < V; i++) {
             for (int j = 0; j < E; j++) {
-                int u = Integer.parseInt(edges[j].getFrom().getLabel())-1;
-                int v = Integer.parseInt(edges[j].getTo().getLabel())-1;
+                int u = Integer.parseInt(edges[j].getFrom().getLabel()) - 1;
+                int v = Integer.parseInt(edges[j].getTo().getLabel()) - 1;
                 int weight = edges[j].getWeight();
 
                 if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
@@ -347,5 +349,14 @@ public class Task {
         }
 
         return dist;
+    }
+
+    public static void bellmanFord(Graph graph) {
+        int V = graph.getAdjacencyList().keySet().size();
+        int E = graph.getEdgeList().size();
+
+        for (Vertex vertex : graph.getAdjacencyList().keySet()) {
+            System.out.println(Arrays.toString(bellmanFord(graph, vertex, V, E)));
+        }
     }
 }
