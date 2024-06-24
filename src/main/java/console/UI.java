@@ -207,6 +207,67 @@ public class UI {
                 Task.MST(graph);
             }
 
+            if (str.equals("IVa")) {
+                List<Vertex> vertices = new ArrayList<>(graph.getAdjacencyList().keySet());
+
+                System.out.println("start end L: ");
+
+                str = scanner.nextLine();
+
+                Vertex start = new Vertex(str.split(" ")[0]);
+                Vertex end = new Vertex((str.split(" ")[1]));
+                int l = Integer.parseInt(str.split(" ")[2]);
+
+                if (!vertices.contains(start)) {
+                    System.out.println("Vertex " + start.getLabel() + " doesn't exist.");
+                }
+                if (!vertices.contains(end)) {
+                    System.out.println("Vertex " + end.getLabel() + " doesn't exist.");
+                }
+
+                if (vertices.contains(start) && vertices.contains(end)) {
+                    boolean exists = Task.dijkstra(graph, start, end, l);
+
+                    if (exists) {
+                        System.out.println("Exists.");
+                    } else {
+                        System.out.println("Doesn't exist.");
+                    }
+                }
+            }
+
+            if (str.equals("IVb")) {
+                List<Vertex> vertices = new ArrayList<>(graph.getAdjacencyList().keySet());
+
+                System.out.println("u v1 v2: ");
+
+                str = scanner.nextLine();
+
+                Vertex u = new Vertex(str.split(" ")[0]);
+                Vertex v1 = new Vertex((str.split(" ")[1]));
+                Vertex v2 = new Vertex(str.split(" ")[2]);
+
+                if (!vertices.contains(u)) {
+                    System.out.println("Vertex " + u.getLabel() + " doesn't exist.");
+                }
+                if (!vertices.contains(v1)) {
+                    System.out.println("Vertex " + v1.getLabel() + " doesn't exist.");
+                }
+                if (!vertices.contains(v2)) {
+                    System.out.println("Vertex " + v2.getLabel() + " doesn't exist.");
+                }
+
+                if (vertices.contains(u) && vertices.contains(v1) && vertices.contains(v2)) {
+                    int[] distances = Task.bellmanFord(graph, u, v1, v2);
+
+                    System.out.println(
+                            Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v1.getLabel())
+                                    + " = " + distances[Integer.parseInt(v1.getLabel()) - 1] + "\n" +
+                                    Integer.parseInt(u.getLabel()) + " -> " + Integer.parseInt(v2.getLabel())
+                                    + " = " + distances[Integer.parseInt(v2.getLabel()) - 1]);
+                }
+            }
+
             if (str.matches("print")) {
                 if (graph != null) {
                     if (!graph.getAdjacencyList().isEmpty()) {

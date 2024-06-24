@@ -229,12 +229,10 @@ public class Task {
         List<Subset> subsets = new ArrayList<>(V);
         List<Edge> results = new ArrayList<>(V);
 
-        // Create V subsets with single elements
         for (int i = 0; i < V; i++) {
             subsets.add(new Subset(i, 0));
         }
 
-        // Number of edges to be taken is equal to V-1
         while (noOfEdges < V - 1 && j < V - 1) {
 
             // Pick the smallest edge. And increment
@@ -323,5 +321,31 @@ public class Task {
         } while (!unvisitedVertices.isEmpty() || currentVertex.equals(end));
 
         return distances.get(end) <= l;
+    }
+
+    //    IVc (8)
+    public static int[] bellmanFord(Graph graph, Vertex u1, Vertex v1, Vertex v2) {
+        int V = graph.getAdjacencyList().keySet().size();
+        int E = graph.getEdgeList().size();
+
+        Edge[] edges = graph.getEdgeList().toArray(new Edge[0]);
+
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[Integer.parseInt(u1.getLabel())-1] = 0;
+
+        for (int i = 1; i < V; i++) {
+            for (int j = 0; j < E; j++) {
+                int u = Integer.parseInt(edges[j].getFrom().getLabel())-1;
+                int v = Integer.parseInt(edges[j].getTo().getLabel())-1;
+                int weight = edges[j].getWeight();
+
+                if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                }
+            }
+        }
+
+        return dist;
     }
 }
