@@ -348,6 +348,24 @@ public class Task {
             }
         }
 
+        boolean negativeCycles = false;
+
+        for (int j = 0; j < E; j++) {
+            int u = Integer.parseInt(edges[j].getFrom().getLabel()) - 1;
+            int v = Integer.parseInt(edges[j].getTo().getLabel()) - 1;
+            int weight = edges[j].getWeight();
+
+            if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
+                negativeCycles = true;
+                break;
+            }
+        }
+
+        if (negativeCycles) {
+            System.out.println("Contains negative cycles.");
+            dist = new int[0];
+        }
+
         return dist;
     }
 
